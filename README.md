@@ -240,3 +240,69 @@ npm run build
 distフォルダにstyle.cssが生成されます。
 index.htmlファイルにlink要素でstyle.cssとリンクさせて正しく表示されればOKです。
 
+## 画像のバンドル
+
+画像をバンドルするには`url-loader`をインストールする必要があります。
+これは画像をjavascript化することです。
+
+```
+npm install --save-dev url-loader
+```
+
+webpack.config.js
+```
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+module.exports = {
+	entry:'./src/index.js',
+	output:{
+		path:`${__dirname}/dist`,
+		filename:'main.js'
+	},
+	devServer:{
+		contentBase:'./dist'
+	},
+	module:{
+		rules:[
+			{
+				test: /\.css$/,
+				use:ExtractTextPlugin.extract({
+					use:'css-loader'
+				})
+			},
+			{
+		        test: /\.(gif|png|jpg)$/,
+		        use: [
+		          {
+		            loader: 'url-loader',
+		            options: {
+		              limit: 51200,
+		              name: './images/[name].[ext]'
+		            }
+		          }
+		        ]
+		    }
+		]
+	},
+	plugins:[
+		new ExtractTextPlugin('style.css'),
+		]
+}
+
+```
+
+index.js
+```
+import {NAME} from './myval.js';
+import './style.css'
+import pic from './images/logo.gif';
+console.log(NAME);
+window.addEventListener('DOMContentLoaded',
+	function(){
+		let img = new Image();
+		img.src = pic;
+		document.body.appendChild(img);
+	},false);
+```
+
+これで画像が表示されます。
