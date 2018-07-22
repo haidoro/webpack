@@ -82,3 +82,66 @@ npx webpack --mode=development
 ```
 
 main.jsがdistフォルダに生成されたらindex.htmlをブラウザの検証からconsole.logの確認をします。名前が表示されたらうまくいきました。
+
+### webpack.config.js作成
+
+もし、webpack既定の設定を変更したい場合は`webpack.config.js`ファイルを作成します。
+このサンプルは既定の設定と同一の内容です。
+
+`webpack.config.js`ファイルの例
+
+```
+module.exports = {
+	entry:'./src/index.js',
+	output:{
+		path:`${__dirname}/dist`,
+		filename:'main.js'
+	},
+}
+```
+
+`webpack.config.js`ファイルに従ってwebpackを起動するには次のコマンドを入力します。なお、----watchオプションは編集を行って保存すると再コンパイルされます。
+
+```
+npx webpack --watch --config webpack.config.js
+```
+
+これでは面倒なので、package.jsonに次の記述を追加します。
+
+```
+"scripts":{
+	"build":"webpack --watch --config webpack.config.js"	
+},
+```
+
+以後は`npm run build`で起動します。
+
+
+
+## devサーバーの導入
+
+### devサーバーのインストール
+
+```
+ npm install --save-dev webpack-dev-server
+```
+
+webpack.config.jsに以下を追加
+```
+devServer:{
+		contentBase:'./dist'
+},
+```
+
+起動を簡単にするためにpackage.jsonに`"start":"webpack-dev-server --open",`を追加
+
+```
+"scripts": {
+    "start":"webpack-dev-server --open",
+    "build": "webpack --watch --config webpack.config.js"
+  },
+```
+
+これで`npm start`でdevサーバーが開きます。  
+終了は`control+c`
+
