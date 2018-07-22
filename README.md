@@ -145,3 +145,53 @@ devServer:{
 これで`npm start`でdevサーバーが開きます。  
 終了は`control+c`
 
+## スタイルシートのバンドル
+スタイルシートをjavascript化してバンドルするものです。
+そのためには、`css-loader/style-loader`という仕組みを使います。css-loaderはスタイルシートを読み込むためのものです。
+また、style-loaderはstyle要素としてHTMLに反映するものです。
+
+簡単なスタイルシートをsrcフォルダに追加しておきます。
+
+```
+h1{
+	color:blue;
+}
+```
+
+`css-loader/style-loader`の導入
+
+```
+npm install --save-dev webpack webpack-cli css-loader style-loader
+```
+
+次に、webpack.config.jsに`module:{}`部分を追記します。
+
+```
+module.exports = {
+	entry:'./src/index.js',
+	output:{
+		path:`${__dirname}/dist`,
+		filename:'main.js'
+	},
+	devServer:{
+		contentBase:'./dist'
+	},
+	module:{
+		rules:[
+			{
+				test: /\.css$/,
+				use:[
+					'style-loader',
+					'css-loader'
+				]
+			}
+		]
+	}
+}
+```
+
+あとはindex.jsに`import './style.css'`を追加します。
+`npm start`でブラウザが開きCSSが効いていれば成功です。
+
+index.htmlをブラウザの検証でコードを確認するとheadタグ内にstyleタグが生成されてその中にCSSが記述されているのが確認できます。
+
