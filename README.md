@@ -161,7 +161,7 @@ h1{
 `css-loader/style-loader`の導入
 
 ```
-npm install --save-dev webpack webpack-cli css-loader style-loader
+npm install --save-dev css-loader style-loader
 ```
 
 次に、webpack.config.jsに`module:{}`部分を追記します。
@@ -194,4 +194,49 @@ module.exports = {
 `npm start`でブラウザが開きCSSが効いていれば成功です。
 
 index.htmlをブラウザの検証でコードを確認するとheadタグ内にstyleタグが生成されてその中にCSSが記述されているのが確認できます。
+
+## スタイルシートを別ファイルにしたい
+通常はembedタイプのスタイル設定ではなく別ファイルにする場合が多いです。
+
+この場合はExtractTextPluginを使用します。
+ExtractTextPluginの導入は次のようにします。
+```
+npm install --save-dev extract-text-webpack-plugin@next
+```
+
+webpack.config.js
+```
+module.exports = {
+	entry:'./src/index.js',
+	output:{
+		path:`${__dirname}/dist`,
+		filename:'main.js'
+	},
+	devServer:{
+		contentBase:'./dist'
+	},
+	module:{
+		rules:[
+			{
+				test: /\.css$/,
+				use:ExtractTextPlugin.extract({
+					use:'css-loader'
+				})
+			}
+		]
+	},
+	plugins:[
+		new ExtractTextPlugin('style.css'),
+		]
+}
+
+```
+ここで再度ビルドします。
+
+```
+npm run build
+```
+
+distフォルダにstyle.cssが生成されます。
+index.htmlファイルにlink要素でstyle.cssとリンクさせて正しく表示されればOKです。
 
