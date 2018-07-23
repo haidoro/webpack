@@ -1,5 +1,5 @@
 import {NAME} from './myval.js';
-import './style.css'
+import './style.scss'
 import pic from './images/logo.gif';
 console.log(NAME);
 window.addEventListener('DOMContentLoaded',

@@ -306,3 +306,63 @@ window.addEventListener('DOMContentLoaded',
 ```
 
 これで画像が表示されます。
+
+
+## SASSの導入
+
+SASSの環境を構築するには以下インストールします。
+index.htmlへのcss書き出しはhead内のstyle要素内となります。
+
+```
+ npm install --save-dev sass-loader node-sass
+```
+
+webpack.config.jsには以下の記述
+
+```
+module.exports = {
+	entry:'./src/index.js',
+	output:{
+		path:`${__dirname}/dist`,
+		filename:'main.js'
+	},
+	devServer:{
+		contentBase:'./dist'
+	},
+	module:{
+		rules:[
+			{
+		        test: /\.(gif|png|jpg)$/,
+		        use: [
+		          {
+		            loader: 'url-loader',
+		            options: {
+		              limit: 51200,
+		              name: './images/[name].[ext]'
+		            }
+		          }
+		        ]
+		    },
+		    {
+		    	test: /\.scss$/,
+		    	use:['style-loader','css-loader','sass-loader']
+		    },
+		]
+	}
+}
+```
+
+index.jsのcssインポートの記述をscssに変更します。
+
+```
+import {NAME} from './myval.js';
+import './style.scss'
+import pic from './images/logo.gif';
+console.log(NAME);
+window.addEventListener('DOMContentLoaded',
+	function(){
+		let img = new Image();
+		img.src = pic;
+		document.body.appendChild(img);
+	},false);
+```
